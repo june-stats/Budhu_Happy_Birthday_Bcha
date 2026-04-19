@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Surprise for the Prettiest Girl ✨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ff85a2;
+            --soft-pink: #fecfef;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #fff5f7, #fecfef, #ffdde1, #fff5f7);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        /* Popping Animation for "Tap Me" */
+        .animate-pop {
+            animation: pop 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pop {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 10px rgba(255, 133, 162, 0.5); }
+        }
+
+        /* Falling Hearts */
+        .heart {
+            position: absolute;
+            color: var(--primary-pink);
+            pointer-events: none;
+            z-index: 1;
+            user-select: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Burst Hearts */
+        .burst-heart {
+            position: absolute;
+            pointer-events: none;
+            z-index: 50;
+            animation: burstOut 0.8s ease-out forwards;
+        }
+
+        @keyframes burstOut {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(var(--tw-x), var(--tw-y)) scale(1.5); opacity: 0; }
+        }
+
+        .pulse-pink {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 133, 162, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 133, 162, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 133, 162, 0); }
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+        }
+
+        * { -webkit-tap-highlight-color: transparent; }
+    </style>
+</head>
+<body>
+
+    <!-- Soothing Sound Audio -->
+    <audio id="soothingSound" src="sounds/soothing.mp3" loop preload="auto"></audio>
+
+    <div class="z-10 flex flex-col items-center justify-center text-center p-8 max-w-sm w-full glass-card mx-4 shadow-2xl">
+        
+        <!-- Interactive Emoji Section -->
+        <div class="relative mb-12 cursor-pointer group" onclick="spawnBurst(event)">
+            <div class="floating w-32 h-32 bg-white rounded-full shadow-xl flex items-center justify-center border-4 border-pink-100 transition-transform active:scale-90">
+                <span class="text-6xl select-none">👸</span>
+            </div>
+            <div class="absolute -top-2 -right-2 text-3xl animate-bounce">✨</div>
+            <div class="absolute -bottom-2 -left-2 text-3xl animate-pulse">💖</div>
+            
+            <!-- Persistent Popping "Tap Me" Text -->
+            <div class="absolute -bottom-10 w-full text-pink-500 text-sm font-bold tracking-widest animate-pop select-none">
+                ✨ TAP ME! ✨
+            </div>
+        </div>
+
+        <h1 class="text-3xl font-bold text-pink-600 mb-6 leading-tight">
+            Is the <span class="font-['Pacifico'] text-4xl text-pink-400">most pretty</span> <br> 
+            & <span class="underline decoration-wavy decoration-pink-300">cutest girl</span> ever...
+        </h1>
+        
+        <p class="text-gray-600 text-lg mb-10 italic font-medium">
+            ...excited to see what's hiding in the upcoming slides? 🙈
+        </p>
+
+        <!-- Navigation Button -->
+        <a href="celebrate.html" 
+           id="goBtn"
+           class="pulse-pink gradient-bg text-white font-bold py-4 px-12 rounded-full shadow-lg text-xl transition-all active:scale-95 flex items-center gap-3 no-underline">
+            Let's Go! 🚀
+        </a>
+
+        <p class="mt-10 text-pink-400 text-[10px] font-bold tracking-[0.2em] uppercase opacity-70">A special journey just for you</p>
+    </div>
+
+    <script>
+        // Audio Management
+        const soothingSound = document.getElementById('soothingSound');
+
+        function playSound() {
+            soothingSound.play().catch(err => {
+                console.log("Autoplay prevented. Waiting for user interaction to play audio.");
+            });
+        }
+
+        // Try to play on load
+        window.addEventListener('load', playSound);
+
+        // Fallback for mobile/stricter browsers: play on first click of the landing page
+        document.addEventListener('click', () => {
+            playSound();
+        }, { once: true });
+        
+        document.addEventListener('touchstart', () => {
+            playSound();
+        }, { once: true });
+
+        // Falling hearts background
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            const hearts = ['❤️', '💖', '✨', '🌸', '💝', '🎀'];
+            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+            
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 7000);
+        }
+
+        // Create hearts at intervals
+        setInterval(createHeart, 400);
+
+        // Burst effect when clicking the princess
+        function spawnBurst(e) {
+            const count = 12;
+            for (let i = 0; i < count; i++) {
+                const b = document.createElement('div');
+                b.classList.add('burst-heart');
+                b.innerHTML = ['❤️', '💖', '✨'][Math.floor(Math.random() * 3)];
+                
+                const angle = (i / count) * (Math.PI * 2);
+                const velocity = 80 + Math.random() * 70;
+                const tx = Math.cos(angle) * velocity + 'px';
+                const ty = Math.sin(angle) * velocity + 'px';
+                
+                b.style.setProperty('--tw-x', tx);
+                b.style.setProperty('--tw-y', ty);
+                
+                // Position at center of emoji
+                const rect = e.currentTarget.getBoundingClientRect();
+                b.style.left = (rect.left + rect.width / 2) + 'px';
+                b.style.top = (rect.top + rect.height / 2) + 'px';
+                
+                document.body.appendChild(b);
+                setTimeout(() => b.remove(), 800);
+            }
+        }
+
+        // Audio system unlock for next page
+        document.getElementById('goBtn').addEventListener('click', function() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            } catch (e) {
+                console.log("Audio prep silent fail - usually fine on move to next page.");
+            }
+        });
+    </script>
+</body>
+</html>
