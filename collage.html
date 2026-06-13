@@ -7,15 +7,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&family=Pacifico&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Quicksand', sans-serif;
             background: #fff5f7;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* Animated Background */
         .bg-glow {
             position: fixed;
             top: 0;
@@ -26,7 +33,6 @@
             z-index: -1;
         }
 
-        /* Masonry Grid Logic */
         .collage-grid {
             column-count: 2;
             column-gap: 15px;
@@ -62,21 +68,27 @@
             display: block;
         }
 
-        /* Floating Hearts */
-        .heart {
-            position: absolute;
-            color: #ff85a2;
+        /* FLOATING HEARTS (full screen) */
+        .floating-heart {
+            position: fixed;
+            top: 0;
+            left: 0;
             pointer-events: none;
-            z-index: 10;
-            animation: floatUp 4s linear forwards;
+            z-index: 100;
+            animation: fallFullScreen linear forwards;
+        }
+        @keyframes fallFullScreen {
+            0% {
+                transform: translateY(-30px) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(calc(100vh + 50px)) rotate(360deg);
+                opacity: 0;
+            }
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
-        }
-
-        /* Lightbox effect */
+        /* Lightbox */
         #lightbox {
             display: none;
             position: fixed;
@@ -85,19 +97,20 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            z-index: 100;
+            z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-
+        #lightbox.active {
+            display: flex;
+        }
         #lightbox img {
             max-width: 100%;
             max-height: 80%;
             border-radius: 10px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
         }
-
         .close-btn {
             position: absolute;
             top: 20px;
@@ -108,10 +121,57 @@
             cursor: pointer;
         }
 
-        * { -webkit-tap-highlight-color: transparent; }
+        /* Music visualizer (optional, for user feedback) */
+        .music-visualizer {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(255,255,240,0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 40px;
+            padding: 6px 12px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            z-index: 200;
+            cursor: pointer;
+        }
+        .music-bar {
+            width: 4px;
+            height: 12px;
+            background: #ff4d6d;
+            border-radius: 2px;
+            animation: soundWave 0.8s infinite ease alternate;
+            transform-origin: bottom;
+        }
+        .music-bar:nth-child(2) { animation-delay: 0.2s; height: 18px; }
+        .music-bar:nth-child(3) { animation-delay: 0.4s; height: 10px; }
+        .music-bar:nth-child(4) { animation-delay: 0.1s; height: 14px; }
+        @keyframes soundWave {
+            0% { transform: scaleY(0.5); opacity: 0.6; }
+            100% { transform: scaleY(1.2); opacity: 1; }
+        }
+        .music-text {
+            font-size: 10px;
+            font-weight: bold;
+            color: #ff4d6d;
+            margin-left: 6px;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Background music: autoplay, loop, volume 0.25 -->
+    <audio id="bgMusic" src="sounds/collage_music.mp3" autoplay loop preload="auto"></audio>
+
+    <!-- Music visualizer (click to toggle) -->
+    <div class="music-visualizer" id="musicToggle">
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <span class="music-text">🎵 ♪</span>
+    </div>
 
     <div class="bg-glow"></div>
 
@@ -122,28 +182,28 @@
 
     <div class="collage-grid">
         <div class="collage-item" onclick="openLightbox(this)">
-            <img src="https://picsum.photos/400/600?random=11" alt="Memory">
+            <img src="https://picsum.photos/400/600?random=11" alt="Memory" loading="lazy">
         </div>
         <div class="collage-item" onclick="openLightbox(this)">
-            <img src="https://picsum.photos/400/400?random=12" alt="Memory">
+            <img src="https://picsum.photos/400/400?random=12" alt="Memory" loading="lazy">
         </div>
         <div class="collage-item" onclick="openLightbox(this)">
-            <img src="https://picsum.photos/400/500?random=13" alt="Memory">
+            <img src="https://picsum.photos/400/500?random=13" alt="Memory" loading="lazy">
         </div>
         <div class="collage-item" onclick="openLightbox(this)">
-            <img src="https://picsum.photos/400/700?random=14" alt="Memory">
+            <img src="https://picsum.photos/400/700?random=14" alt="Memory" loading="lazy">
         </div>
         <div class="collage-item" onclick="openLightbox(this)">
-            <img src="https://picsum.photos/400/450?random=15" alt="Memory">
+            <img src="https://picsum.photos/400/450?random=15" alt="Memory" loading="lazy">
         </div>
         <div class="collage-item" onclick="openLightbox(this)">
-            <img src="https://picsum.photos/400/650?random=16" alt="Memory">
+            <img src="https://picsum.photos/400/650?random=16" alt="Memory" loading="lazy">
         </div>
         <div class="collage-item" onclick="openLightbox(this)">
-            <img src="https://picsum.photos/400/400?random=17" alt="Memory">
+            <img src="https://picsum.photos/400/400?random=17" alt="Memory" loading="lazy">
         </div>
         <div class="collage-item" onclick="openLightbox(this)">
-            <img src="https://picsum.photos/400/550?random=18" alt="Memory">
+            <img src="https://picsum.photos/400/550?random=18" alt="Memory" loading="lazy">
         </div>
     </div>
 
@@ -165,43 +225,81 @@ you are my favorite one. ❤️"</h2>
     </div>
 
     <script>
+        // --- Music autoplay at 25% volume ---
+        const bgMusic = document.getElementById('bgMusic');
+        bgMusic.volume = 1;
+
+        // Force autoplay on page load
+        function attemptAutoPlay() {
+            bgMusic.play().then(() => {
+                console.log("Collage music started automatically");
+            }).catch((err) => {
+                console.log("Autoplay blocked (browser restriction) – music will not play automatically");
+            });
+        }
+        window.addEventListener('load', attemptAutoPlay);
+        // Also try immediately
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', attemptAutoPlay);
+        } else {
+            attemptAutoPlay();
+        }
+
+        // Optional: toggle music via visualizer
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (bgMusic.paused) {
+                bgMusic.play().catch(e => console.log("Play failed"));
+            } else {
+                bgMusic.pause();
+            }
+        });
+
+        // --- Lightbox functions ---
         function openLightbox(element) {
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightboxImg');
             const clickedImg = element.querySelector('img');
-            
             lightboxImg.src = clickedImg.src;
-            lightbox.style.display = 'flex';
-            
-            // Burst of hearts when opening
-            for(let i=0; i<10; i++) {
+            lightbox.classList.add('active');
+            // Burst of hearts
+            for (let i = 0; i < 10; i++) {
                 setTimeout(createHeart, i * 100);
             }
         }
 
         function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        // --- Full‑screen falling hearts ---
+        function createFallingElement(className, iconsArray, minSize = 14, maxSize = 26, durationMin = 4, durationMax = 7) {
+            const el = document.createElement('div');
+            el.classList.add(className);
+            el.innerHTML = iconsArray[Math.floor(Math.random() * iconsArray.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.fontSize = (Math.random() * (maxSize - minSize) + minSize) + 'px';
+            const duration = Math.random() * (durationMax - durationMin) + durationMin;
+            el.style.animationDuration = duration + 's';
+            el.style.opacity = Math.random() * 0.7 + 0.3;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), duration * 1000);
         }
 
         function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = ['❤️', '💖', '✨', '🌸'][Math.floor(Math.random() * 4)];
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.bottom = '0';
-            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 4000);
+            createFallingElement('floating-heart', ['❤️', '💖', '🌸', '✨', '💝'], 14, 28, 4.5, 7.5);
         }
 
-        // Random hearts popping from bottom
-        setInterval(createHeart, 800);
+        // Start continuous falling hearts
+        setInterval(createHeart, 600);
 
+        // Restart journey
         function restartJourney() {
             window.location.href = 'landing.html';
         }
 
-        // Prevent back button from breaking the flow
+        // Prevent back button from breaking flow
         window.history.pushState(null, null, window.location.href);
         window.onpopstate = function () {
             window.history.go(1);
