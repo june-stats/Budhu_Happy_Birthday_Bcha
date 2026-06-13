@@ -12,17 +12,25 @@
             --soft-pink: #fecfef;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Quicksand', sans-serif;
             margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: linear-gradient(-45deg, #fff0f5, #ffe4ed, #ffd9e6, #fff0f5);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(-45deg, #fff5f7, #fecfef, #ffdde1, #fff5f7);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            position: relative;
         }
 
         @keyframes gradientBG {
@@ -31,200 +39,302 @@
             100% { background-position: 0% 50%; }
         }
 
-        .gradient-bg {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-        }
-
-        /* Floating Animation */
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @keyframes floating {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(3deg); }
-        }
-
-        /* Popping Animation for "Tap Me" */
-        .animate-pop {
-            animation: pop 1.2s ease-in-out infinite;
-        }
-
-        @keyframes pop {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 10px rgba(255, 133, 162, 0.5); }
-        }
-
-        /* Falling Hearts */
-        .heart {
+        /* Floating hearts background */
+        .floating-heart-bg {
             position: absolute;
-            color: var(--primary-pink);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            z-index: 1;
-            user-select: none;
-            animation: fall linear forwards;
+            z-index: 0;
+            overflow: hidden;
         }
 
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.4; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        .heart-bg {
+            position: absolute;
+            color: #ffb7c5;
+            opacity: 0.3;
+            animation: floatHeartBg 8s infinite linear;
+            font-size: 1.2rem;
         }
 
-        /* Burst Hearts */
+        @keyframes floatHeartBg {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.3; }
+            80% { opacity: 0.3; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Glass card with shine */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(255, 105, 130, 0.2), inset 0 1px 1px rgba(255,255,255,0.8);
+            transition: transform 0.3s ease;
+        }
+
+        /* Interactive princess crown */
+        .princess-area {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .princess-area:active {
+            transform: scale(0.95);
+        }
+
+        .floating {
+            animation: floatGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes floatGlow {
+            0%, 100% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 5px #ff85a2); }
+            50% { transform: translateY(-12px) scale(1.02); filter: drop-shadow(0 0 15px #ff4d6d); }
+        }
+
+        /* Pop animation for tap me */
+        .animate-pop {
+            animation: popScale 1.4s ease-in-out infinite;
+        }
+
+        @keyframes popScale {
+            0%, 100% { transform: scale(1); opacity: 0.8; text-shadow: 0 0 0px #ff85a2; }
+            50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 12px #ff85a2; }
+        }
+
+        /* Burst hearts effect */
         .burst-heart {
             position: absolute;
             pointer-events: none;
-            z-index: 50;
+            z-index: 100;
             animation: burstOut 0.8s ease-out forwards;
         }
 
         @keyframes burstOut {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            100% { transform: translate(var(--tw-x), var(--tw-y)) scale(1.5); opacity: 0; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.5); opacity: 0; }
         }
 
+        /* Falling hearts (continuous) */
+        .falling-heart {
+            position: absolute;
+            color: #ff85a2;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Button pulse */
         .pulse-pink {
-            animation: pulse 2s infinite;
+            animation: btnPulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 133, 162, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 133, 162, 0); }
+        @keyframes btnPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 133, 162, 0.5); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(255, 133, 162, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 133, 162, 0); }
         }
 
-        /* Glassmorphism card */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 2rem;
+        /* Sparkle text */
+        .sparkle-text {
+            background: linear-gradient(135deg, #ff4d6d, #ff85a2, #ffb347);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmerText 3s linear infinite;
         }
 
-        * { -webkit-tap-highlight-color: transparent; }
+        @keyframes shimmerText {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .cute-gif {
+            width: 80px;
+            height: auto;
+            filter: drop-shadow(0 8px 15px rgba(255,105,130,0.3));
+        }
+
+        /* Audio hint (optional but not intrusive) */
+        .audio-hint {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(4px);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 10px;
+            color: #ff4d6d;
+            z-index: 200;
+            pointer-events: none;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Soothing Sound Audio -->
+    <!-- Background floating hearts -->
+    <div class="floating-heart-bg" id="heartBg"></div>
+
+    <!-- Soothing audio -->
     <audio id="soothingSound" src="sounds/soothing.mp3" loop preload="auto"></audio>
 
-    <div class="z-10 flex flex-col items-center justify-center text-center p-8 max-w-sm w-full glass-card mx-4 shadow-2xl">
-        
-        <!-- Interactive Emoji Section -->
-        <div class="relative mb-12 cursor-pointer group" onclick="spawnBurst(event)">
-            <div class="floating w-32 h-32 bg-white rounded-full shadow-xl flex items-center justify-center border-4 border-pink-100 transition-transform active:scale-90">
-                <span class="text-6xl select-none">👸</span>
-            </div>
-            <div class="absolute -top-2 -right-2 text-3xl animate-bounce">✨</div>
-            <div class="absolute -bottom-2 -left-2 text-3xl animate-pulse">💖</div>
+    <!-- Subtle hint (only if autoplay fails, shows for a few seconds) -->
+    <div id="audioHint" class="audio-hint" style="display: none;">🔊 Tap anywhere for music</div>
+
+    <!-- Main card -->
+    <div class="z-20 w-full max-w-sm mx-4">
+        <div class="glass-card p-8 text-center shadow-2xl">
             
-            <!-- Persistent Popping "Tap Me" Text -->
-            <div class="absolute -bottom-10 w-full text-pink-500 text-sm font-bold tracking-widest animate-pop select-none">
-                ✨ TAP ME! ✨
+            <!-- Interactive Princess + GIF -->
+            <div class="relative mb-10 flex flex-col items-center">
+                <div class="princess-area floating" onclick="spawnBurst(event)">
+                    <div class="w-36 h-36 bg-white/70 rounded-full shadow-xl flex items-center justify-center border-4 border-pink-200 transition-all duration-200">
+                        <span class="text-7xl select-none">👸🏼</span>
+                    </div>
+                    <div class="absolute -top-3 -right-2 text-3xl animate-bounce">✨</div>
+                    <!-- <div class="absolute -bottom-2 -left-2">
+                        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmtnd2R0cXhkaGY0a2J6N3YwZmpvY3VpNzYwZzZjeTl3NWp6dHYxYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/3o7abB06u9bNzA8LC8/giphy.gif" alt="sparkle" class="cute-gif w-8 h-8">
+                    </div> -->
+                </div>
+                
+                <div class="absolute -bottom-8 w-full text-center">
+                    <span class="text-pink-500 text-sm font-bold tracking-wider animate-pop inline-block bg-white/40 px-4 py-1 rounded-full backdrop-blur-sm">
+                        ✨ TAP THE PRINCESS! ✨
+                    </span>
+                </div>
             </div>
+
+            <h1 class="text-3xl font-bold mb-4">
+                Is the <span class="font-['Pacifico'] text-4xl sparkle-text">most pretty</span><br>
+                & <span class="underline decoration-wavy decoration-pink-300">cutest girl</span> ever...
+            </h1>
+            
+            <div class="flex justify-center gap-2 my-3">
+                <span class="text-pink-300 text-xl">✦</span>
+                <span class="text-pink-300 text-xl">✧</span>
+                <span class="text-pink-300 text-xl">✦</span>
+            </div>
+
+            <p class="text-gray-600 text-lg mb-8 italic font-medium px-2">
+                ...excited to see what's hiding in the upcoming slides? 🙈💕
+            </p>
+
+            <a href="celebrate.html" 
+               id="goBtn"
+               class="pulse-pink inline-flex items-center justify-center gap-3 bg-gradient-to-r from-pink-400 to-pink-500 text-white font-bold py-4 px-10 rounded-full shadow-xl text-xl transition-all active:scale-95 no-underline hover:shadow-2xl">
+                <span>🚀</span> Let's Go!
+            </a>
+
+            <p class="mt-10 text-pink-300 text-[11px] font-bold tracking-[0.3em] uppercase flex items-center justify-center gap-2">
+                <span>🌸</span> A special journey just for you <span>🌸</span>
+            </p>
         </div>
-
-        <h1 class="text-3xl font-bold text-pink-600 mb-6 leading-tight">
-            Is the <span class="font-['Pacifico'] text-4xl text-pink-400">most pretty</span> <br> 
-            & <span class="underline decoration-wavy decoration-pink-300">cutest girl</span> ever...
-        </h1>
-        
-        <p class="text-gray-600 text-lg mb-10 italic font-medium">
-            ...excited to see what's hiding in the upcoming slides? 🙈
-        </p>
-
-        <!-- Navigation Button -->
-        <a href="celebrate.html" 
-           id="goBtn"
-           class="pulse-pink gradient-bg text-white font-bold py-4 px-12 rounded-full shadow-lg text-xl transition-all active:scale-95 flex items-center gap-3 no-underline">
-            Let's Go! 🚀
-        </a>
-
-        <p class="mt-10 text-pink-400 text-[10px] font-bold tracking-[0.2em] uppercase opacity-70">A special journey just for you</p>
     </div>
 
     <script>
-        // Audio Management
         const soothingSound = document.getElementById('soothingSound');
+        const audioHint = document.getElementById('audioHint');
 
-        function playSound() {
-            soothingSound.play().catch(err => {
-                console.log("Autoplay prevented. Waiting for user interaction to play audio.");
+        // Attempt to play automatically on page load (unmuted - will likely be blocked)
+        function tryAutoPlay() {
+            soothingSound.play().then(() => {
+                console.log("Autoplay succeeded!");
+                audioHint.style.display = 'none';
+            }).catch((err) => {
+                console.log("Autoplay blocked:", err);
+                // Show subtle hint for a few seconds
+                audioHint.style.display = 'block';
+                setTimeout(() => {
+                    audioHint.style.opacity = '0';
+                    setTimeout(() => {
+                        audioHint.style.display = 'none';
+                    }, 1000);
+                }, 3000);
+                
+                // Wait for ANY user interaction (tap, click) to start audio
+                const startAudioOnInteraction = () => {
+                    soothingSound.play().then(() => {
+                        console.log("Audio started on user interaction");
+                    }).catch(e => console.log("Still blocked:", e));
+                    document.removeEventListener('click', startAudioOnInteraction);
+                    document.removeEventListener('touchstart', startAudioOnInteraction);
+                };
+                document.addEventListener('click', startAudioOnInteraction);
+                document.addEventListener('touchstart', startAudioOnInteraction);
             });
         }
 
-        // Try to play on load
-        window.addEventListener('load', playSound);
+        // Also play sound when princess is tapped? Not necessary, but kept for burst effect.
+        // But we want sound to start on page open ideally. So call tryAutoPlay on load.
+        window.addEventListener('load', tryAutoPlay);
 
-        // Fallback for mobile/stricter browsers: play on first click of the landing page
-        document.addEventListener('click', () => {
-            playSound();
-        }, { once: true });
-        
-        document.addEventListener('touchstart', () => {
-            playSound();
-        }, { once: true });
-
-        // Falling hearts background
-        function createHeart() {
+        // === Falling hearts background ===
+        function createFallingHeart() {
             const heart = document.createElement('div');
-            heart.classList.add('heart');
-            const hearts = ['❤️', '💖', '✨', '🌸', '💝', '🎀'];
-            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
-            
+            heart.classList.add('falling-heart');
+            const icons = ['❤️', '💖', '🌸', '✨', '💝', '🎀'];
+            heart.innerHTML = icons[Math.floor(Math.random() * icons.length)];
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+            heart.style.fontSize = (Math.random() * 18 + 12) + 'px';
             heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            heart.style.opacity = Math.random() * 0.5 + 0.3;
-            
+            heart.style.opacity = Math.random() * 0.6 + 0.3;
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 7000);
         }
+        setInterval(createFallingHeart, 400);
 
-        // Create hearts at intervals
-        setInterval(createHeart, 400);
+        // === Floating background hearts ===
+        function createBgHeart() {
+            const bgHeart = document.createElement('div');
+            bgHeart.classList.add('heart-bg');
+            bgHeart.innerHTML = ['❤️', '💗', '🌸'][Math.floor(Math.random() * 3)];
+            bgHeart.style.left = Math.random() * 100 + '%';
+            bgHeart.style.fontSize = (Math.random() * 30 + 15) + 'px';
+            bgHeart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            bgHeart.style.animationDelay = Math.random() * 5 + 's';
+            document.getElementById('heartBg').appendChild(bgHeart);
+            setTimeout(() => bgHeart.remove(), 15000);
+        }
+        setInterval(createBgHeart, 2000);
 
-        // Burst effect when clicking the princess
-        function spawnBurst(e) {
-            const count = 12;
+        // === Burst effect on princess tap ===
+        function spawnBurst(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const count = 14;
             for (let i = 0; i < count; i++) {
-                const b = document.createElement('div');
-                b.classList.add('burst-heart');
-                b.innerHTML = ['❤️', '💖', '✨'][Math.floor(Math.random() * 3)];
-                
+                const burst = document.createElement('div');
+                burst.classList.add('burst-heart');
+                burst.innerHTML = ['❤️', '💖', '✨', '🌸'][Math.floor(Math.random() * 4)];
                 const angle = (i / count) * (Math.PI * 2);
-                const velocity = 80 + Math.random() * 70;
+                const velocity = 70 + Math.random() * 60;
                 const tx = Math.cos(angle) * velocity + 'px';
                 const ty = Math.sin(angle) * velocity + 'px';
-                
-                b.style.setProperty('--tw-x', tx);
-                b.style.setProperty('--tw-y', ty);
-                
-                // Position at center of emoji
-                const rect = e.currentTarget.getBoundingClientRect();
-                b.style.left = (rect.left + rect.width / 2) + 'px';
-                b.style.top = (rect.top + rect.height / 2) + 'px';
-                
-                document.body.appendChild(b);
-                setTimeout(() => b.remove(), 800);
+                burst.style.setProperty('--tx', tx);
+                burst.style.setProperty('--ty', ty);
+                burst.style.left = centerX + 'px';
+                burst.style.top = centerY + 'px';
+                document.body.appendChild(burst);
+                setTimeout(() => burst.remove(), 800);
+            }
+            for (let i = 0; i < 8; i++) {
+                setTimeout(createFallingHeart, i * 50);
             }
         }
-
-        // Audio system unlock for next page
-        document.getElementById('goBtn').addEventListener('click', function() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-            } catch (e) {
-                console.log("Audio prep silent fail - usually fine on move to next page.");
-            }
-        });
     </script>
 </body>
 </html>
