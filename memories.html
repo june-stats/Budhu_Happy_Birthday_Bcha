@@ -7,15 +7,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&family=Pacifico&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Quicksand', sans-serif;
             background: linear-gradient(-45deg, #fff5f7, #fecfef, #ffdde1, #fff5f7);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             min-height: 100vh;
-            margin: 0;
-            padding: 0;
             overflow-x: hidden;
+            position: relative;
         }
 
         @keyframes gradientBG {
@@ -25,26 +31,24 @@
         }
 
         .glass-header {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
             border-radius: 2rem;
             padding: 1.5rem;
             width: 90%;
             max-width: 500px;
             text-align: center;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
             position: sticky;
             top: 1rem;
             z-index: 50;
-            box-shadow: 0 8px 32px rgba(255, 133, 162, 0.1);
+            box-shadow: 0 8px 25px rgba(255, 133, 162, 0.15);
+            border: 1px solid rgba(255,255,255,0.4);
         }
 
-        /* Journey Path Styles */
         .journey-container {
             position: relative;
-            padding: 2rem 1rem 10rem 1rem;
+            padding: 2rem 1rem 8rem 1rem;
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
@@ -63,10 +67,10 @@
         .dotted-path {
             fill: none;
             stroke: #ff85a2;
-            stroke-width: 3;
-            stroke-dasharray: 10, 10;
+            stroke-width: 3.5;
+            stroke-dasharray: 8, 10;
             stroke-linecap: round;
-            opacity: 0.6;
+            opacity: 0.7;
         }
 
         .animated-trail {
@@ -76,28 +80,29 @@
             stroke-linecap: round;
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
-            transition: stroke-dashoffset 0.1s linear;
+            transition: stroke-dashoffset 0.05s linear;
+            filter: drop-shadow(0 0 3px #ff85a2);
         }
 
-        /* Polaroid Style */
         .memory-item {
             position: relative;
             z-index: 10;
-            margin-bottom: 8rem;
+            margin-bottom: 7rem;
             width: 100%;
             display: flex;
         }
 
         .polaroid {
             background: white;
-            padding: 0.8rem 0.8rem 2.5rem 0.8rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 220px;
-            width: 70%;
-            border: 1px solid #fce4ec;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 0.8rem 0.8rem 1.8rem 0.8rem;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            max-width: 240px;
+            width: 75%;
+            border-radius: 8px;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.3s;
             opacity: 0;
-            transform: translateY(30px) scale(0.9);
+            transform: translateY(35px) scale(0.92);
+            cursor: pointer;
         }
 
         .polaroid.reveal {
@@ -105,195 +110,354 @@
             transform: translateY(0) scale(1) rotate(var(--rot));
         }
 
+        .polaroid:hover {
+            transform: scale(1.02) rotate(var(--rot));
+            box-shadow: 0 20px 30px rgba(255, 77, 109, 0.3);
+        }
+
+        .polaroid:active {
+            transform: scale(0.96) rotate(var(--rot));
+        }
+
         .polaroid img {
             width: 100%;
             aspect-ratio: 1/1;
             object-fit: cover;
-            background-color: #fce4ec;
-            border-radius: 2px;
+            background: #fce4ec;
+            border-radius: 6px;
         }
 
         .polaroid-caption {
             font-family: 'Dancing Script', cursive;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
+            color: #ff4d6d;
+            margin-top: 0.7rem;
+        }
+
+        /* FALLING ANIMATION */
+        .floating-heart, .floating-note {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1000;
+            animation: fallFullScreen linear forwards;
+        }
+        @keyframes fallFullScreen {
+            0% {
+                transform: translateY(-30px) rotate(0deg);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(calc(100vh + 50px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 80%;
+            background: white;
+            border-radius: 20px;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 12px;
+        }
+        .lightbox-caption {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
             color: #ff4d6d;
             margin-top: 0.8rem;
         }
-
-        .heart {
+        .close-lightbox {
             position: absolute;
-            color: #ff85a2;
-            pointer-events: none;
-            z-index: 1;
-            animation: fall linear forwards;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+            top: -10px;
+            right: -10px;
+            background: white;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .animate-pop {
-            animation: pop 1.2s ease-in-out infinite;
+            animation: gentlePop 1.2s ease-in-out infinite;
         }
-
-        @keyframes pop {
+        @keyframes gentlePop {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.03); text-shadow: 0 0 8px #ff85a2; }
         }
 
-        * { -webkit-tap-highlight-color: transparent; }
+        .music-visualizer {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(255,255,240,0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 40px;
+            padding: 6px 12px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            z-index: 100;
+            cursor: pointer;
+        }
+        .music-bar {
+            width: 4px;
+            height: 12px;
+            background: #ff4d6d;
+            border-radius: 2px;
+            animation: soundWave 0.8s infinite ease alternate;
+            transform-origin: bottom;
+        }
+        .music-bar:nth-child(2) { animation-delay: 0.2s; height: 18px; }
+        .music-bar:nth-child(3) { animation-delay: 0.4s; height: 10px; }
+        .music-bar:nth-child(4) { animation-delay: 0.1s; height: 14px; }
+        @keyframes soundWave {
+            0% { transform: scaleY(0.5); opacity: 0.6; }
+            100% { transform: scaleY(1.2); opacity: 1; }
+        }
+        .music-text {
+            font-size: 10px;
+            font-weight: bold;
+            color: #ff4d6d;
+            margin-left: 6px;
+        }
+
+        @media (max-width: 600px) {
+            .polaroid { width: 85%; }
+            .memory-item { margin-bottom: 6rem; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Background music with autoplay and volume 0.25 -->
+    <audio id="bgMusic" src="sounds/journey_music.mp3" autoplay loop preload="auto"></audio>
+
+    <div class="music-visualizer" id="musicToggle">
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <span class="music-text">🎵 ♪</span>
+    </div>
+
     <div class="glass-header shadow-xl">
         <h1 class="text-2xl font-['Pacifico'] text-pink-500">Our Beautiful Journey</h1>
-        <p class="text-gray-600 text-sm italic">Scroll to trace our path...</p>
+        <p class="text-gray-600 text-sm italic">Scroll down – watch the path come alive ✨</p>
     </div>
 
     <div class="journey-container">
-        <!-- SVG Path for the dotted line -->
         <svg class="path-svg" preserveAspectRatio="none">
             <path id="mainPath" class="dotted-path" d=""></path>
             <path id="trailPath" class="animated-trail" d=""></path>
         </svg>
 
-        <!-- Memory 1: Left -->
         <div class="memory-item justify-start">
-            <div class="polaroid" style="--rot: -3deg">
-                <img src="https://picsum.photos/400/400?random=1" alt="Memory 1" onerror="this.src='https://via.placeholder.com/400x400?text=Us'">
-                <p class="polaroid-caption">Where it started...</p>
+            <div class="polaroid" data-memory="Where our story began... that first shy smile changed everything. 💕" style="--rot: -3deg">
+                <img src="https://picsum.photos/id/20/400/400" alt="Memory 1" loading="lazy">
+                <p class="polaroid-caption">✨ The very beginning ✨</p>
             </div>
         </div>
-
-        <!-- Memory 2: Right -->
         <div class="memory-item justify-end">
-            <div class="polaroid" style="--rot: 4deg">
-                <img src="https://picsum.photos/400/400?random=2" alt="Memory 2" onerror="this.src='https://via.placeholder.com/400x400?text=Cute'">
-                <p class="polaroid-caption">That first date</p>
+            <div class="polaroid" data-memory="Our first date – I knew right then you were special. 🍰🌸" style="--rot: 4deg">
+                <img src="https://picsum.photos/id/29/400/400" alt="Memory 2" loading="lazy">
+                <p class="polaroid-caption">🌸 First date magic</p>
             </div>
         </div>
-
-        <!-- Memory 3: Left -->
         <div class="memory-item justify-start">
-            <div class="polaroid" style="--rot: -2deg">
-                <img src="https://picsum.photos/400/400?random=3" alt="Memory 3" onerror="this.src='https://via.placeholder.com/400x400?text=Smile'">
-                <p class="polaroid-caption">Your favorite laugh</p>
+            <div class="polaroid" data-memory="That laugh of yours – my favorite melody. 🎶❤️" style="--rot: -2deg">
+                <img src="https://picsum.photos/id/64/400/400" alt="Memory 3" loading="lazy">
+                <p class="polaroid-caption">🎵 Your laugh</p>
             </div>
         </div>
-
-        <!-- Memory 4: Right -->
         <div class="memory-item justify-end">
-            <div class="polaroid" style="--rot: 5deg">
-                <img src="https://picsum.photos/400/400?random=4" alt="Memory 4" onerror="this.src='https://via.placeholder.com/400x400?text=Always'">
-                <p class="polaroid-caption">Forever to go</p>
+            <div class="polaroid" data-memory="Every moment with you feels like a dream. I'm so grateful. 💫" style="--rot: 5deg">
+                <img src="https://picsum.photos/id/96/400/400" alt="Memory 4" loading="lazy">
+                <p class="polaroid-caption">💖 Endless moments</p>
             </div>
         </div>
 
-        <!-- Final Message -->
-        <div class="text-center mt-20 pb-20 opacity-0 transition-opacity duration-1000" id="finalMessage">
-            <h2 class="text-4xl font-['Pacifico'] text-pink-600 mb-6">Happy Birthday my Cutie Pie! 🎂</h2>
-            <p class="text-gray-500 mb-8 italic">Every moment with you is a gift...</p>
-            <a href="collage.html" class="animate-pop inline-block bg-pink-500 text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-pink-200 active:scale-90 transition-transform no-underline">
+        <div class="text-center mt-20 pb-20 opacity-0 transition-all duration-1000" id="finalMessage">
+            <h2 class="text-4xl font-['Pacifico'] text-pink-600 mb-4">Happy Birthday my Cutie Pie! 🎂</h2>
+            <p class="text-gray-600 mb-8 italic">Every step of this journey leads to you...</p>
+            <a href="collage.html" class="animate-pop inline-block bg-gradient-to-r from-pink-500 to-pink-400 text-white font-bold py-3 px-8 rounded-full shadow-xl active:scale-95 transition-transform no-underline">
                 Let's see the full collage 📸
             </a>
         </div>
     </div>
 
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <div class="close-lightbox" onclick="closeLightbox()">&times;</div>
+            <img id="lightboxImg" src="" alt="Memory">
+            <div id="lightboxCaption" class="lightbox-caption"></div>
+        </div>
+    </div>
+
     <script>
-        // Path Generation
+        const bgMusic = document.getElementById('bgMusic');
+        bgMusic.volume = 1;
+
+        // Force autoplay on page load with multiple attempts
+        function attemptAutoPlay() {
+            bgMusic.play().then(() => {
+                console.log("Autoplay succeeded");
+            }).catch((err) => {
+                console.log("Autoplay failed:", err);
+                // If blocked, we do NOT add any click listener because user wants no clicks.
+                // But we at least keep the visualizer as an optional manual start.
+            });
+        }
+
+        // Wait for the page to fully load, then try to play.
+        window.addEventListener('load', attemptAutoPlay);
+        // Also try immediately if DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', attemptAutoPlay);
+        } else {
+            attemptAutoPlay();
+        }
+
+        // Music visualizer toggle (remains optional, but does not force a click to start)
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (bgMusic.paused) {
+                bgMusic.play().catch(e => console.log("Play failed"));
+            } else {
+                bgMusic.pause();
+            }
+        });
+
+        // ---- FALLING HEARTS & NOTES ----
+        function createFallingElement(className, iconsArray, minSize = 14, maxSize = 26, durationMin = 4, durationMax = 7) {
+            const el = document.createElement('div');
+            el.classList.add(className);
+            el.innerHTML = iconsArray[Math.floor(Math.random() * iconsArray.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.fontSize = (Math.random() * (maxSize - minSize) + minSize) + 'px';
+            const duration = Math.random() * (durationMax - durationMin) + durationMin;
+            el.style.animationDuration = duration + 's';
+            el.style.opacity = Math.random() * 0.7 + 0.3;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), duration * 1000);
+        }
+
+        function createHeart() {
+            createFallingElement('floating-heart', ['❤️', '💖', '🌸', '✨', '💝'], 14, 28, 4.5, 7.5);
+        }
+        function createFloatingNote() {
+            createFallingElement('floating-note', ['♪', '♫', '🎵', '🎶', '💗'], 12, 24, 3.8, 6.8);
+        }
+
+        setInterval(createHeart, 500);
+        setInterval(() => { if (Math.random() > 0.6) createFloatingNote(); }, 1800);
+
+        // ---- Path, scroll, lightbox (same as before) ----
         function updatePath() {
             const path = document.getElementById('mainPath');
             const trail = document.getElementById('trailPath');
             const items = document.querySelectorAll('.memory-item');
             const container = document.querySelector('.journey-container');
             const containerRect = container.getBoundingClientRect();
-
             let d = "";
-            items.forEach((item, index) => {
+            items.forEach((item, idx) => {
                 const polaroid = item.querySelector('.polaroid');
                 const rect = polaroid.getBoundingClientRect();
-                
-                // Get center relative to container
                 const x = (rect.left + rect.width / 2) - containerRect.left;
                 const y = (rect.top + rect.height / 2) - containerRect.top;
-
-                if (index === 0) {
-                    d += `M ${x} ${y}`;
-                } else {
-                    const prevRect = items[index-1].querySelector('.polaroid').getBoundingClientRect();
+                if (idx === 0) d += `M ${x} ${y}`;
+                else {
+                    const prevRect = items[idx-1].querySelector('.polaroid').getBoundingClientRect();
                     const prevX = (prevRect.left + prevRect.width / 2) - containerRect.left;
                     const prevY = (prevRect.top + prevRect.height / 2) - containerRect.top;
-                    
-                    // Add smooth curve between points
                     const cpY = (prevY + y) / 2;
                     d += ` C ${prevX} ${cpY}, ${x} ${cpY}, ${x} ${y}`;
                 }
             });
-
             path.setAttribute('d', d);
             trail.setAttribute('d', d);
-            
-            // Set path length for animation
             const length = trail.getTotalLength();
             trail.style.strokeDasharray = length;
             trail.style.strokeDashoffset = length;
+            trail.dataset.length = length;
         }
 
-        // Scroll Animation
         function handleScroll() {
             const trail = document.getElementById('trailPath');
-            const length = trail.getTotalLength();
+            const length = parseFloat(trail.dataset.length);
+            if (!length) return;
             const container = document.querySelector('.journey-container');
             const containerRect = container.getBoundingClientRect();
-            
-            // Calculate progress based on how much of the container has passed the viewport
             const windowH = window.innerHeight;
             let progress = (windowH / 2 - containerRect.top) / (containerRect.height - windowH / 2);
-            progress = Math.max(0, Math.min(1, progress));
-
+            progress = Math.min(1, Math.max(0, progress));
             trail.style.strokeDashoffset = length - (length * progress);
-
-            // Reveal Polaroids
             document.querySelectorAll('.polaroid').forEach(p => {
                 const rect = p.getBoundingClientRect();
-                if (rect.top < windowH * 0.8) {
-                    p.classList.add('reveal');
-                }
+                if (rect.top < windowH * 0.8 && rect.bottom > 0) p.classList.add('reveal');
             });
-
-            // Reveal Final Message
             const finalMsg = document.getElementById('finalMessage');
             const finalRect = finalMsg.getBoundingClientRect();
-            if (finalRect.top < windowH * 0.9) {
-                finalMsg.classList.add('opacity-100');
-            }
+            if (finalRect.top < windowH * 0.9) finalMsg.classList.add('opacity-100');
         }
 
-        // Floating Hearts
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            const hearts = ['❤️', '💖', '✨', '🌸', '💝'];
-            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '-5vh';
-            heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
-            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            heart.style.opacity = Math.random() * 0.6 + 0.4;
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 7000);
+        function openLightbox(imgSrc, captionText) {
+            document.getElementById('lightboxImg').src = imgSrc;
+            document.getElementById('lightboxCaption').innerText = captionText;
+            document.getElementById('lightbox').classList.add('active');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+        function initPolaroidClicks() {
+            document.querySelectorAll('.polaroid').forEach(polaroid => {
+                polaroid.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const img = polaroid.querySelector('img');
+                    const memoryText = polaroid.getAttribute('data-memory') || "A beautiful memory 💖";
+                    openLightbox(img.src, memoryText);
+                    for (let i = 0; i < 5; i++) setTimeout(() => createFloatingNote(), i * 60);
+                });
+            });
         }
 
         window.addEventListener('load', () => {
             updatePath();
             handleScroll();
-            setInterval(createHeart, 500);
+            initPolaroidClicks();
         });
         window.addEventListener('scroll', handleScroll);
-        window.addEventListener('resize', updatePath);
-
+        window.addEventListener('resize', () => { updatePath(); handleScroll(); });
     </script>
 </body>
 </html>
